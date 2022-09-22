@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-  --color-bg: #393838;
+  --color-bg: #2c2f33 ;
   --color-text: #08090a;
   --color-blue: #3b49df;
   --color-red: #df3b3b;
@@ -18,14 +18,12 @@ body {
   font-family: 'Noto Sans', sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text);
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
 
 
-main {
-  padding: 1rem 10vw;
-}
+
 
 h1 { font-size: 2rem; }
 h2 { font-size: 1.5rem; }
@@ -67,7 +65,7 @@ code {
 .navbar {
   height: 70px;
   width: 100%;
-  background: rgb(35, 35, 35);
+  background:#23272a ;
   color: var(--colors-text);
   position: fixed;
   top: 0;

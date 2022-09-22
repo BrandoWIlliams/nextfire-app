@@ -2,14 +2,21 @@ import React, { useState } from "react";
 import { logInWithEmailAndPassword, signInWithGoogle } from "../lib/firebase";
 import google from "../public/Images/google.svg";
 import github from "../public/Images/github.svg";
+import { userNameAtom, userAtom } from "../lib/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState({ value: "", show: false });
+  const setUserState = useSetRecoilState(userAtom);
+  const handleGoogle = () => {
+    signInWithGoogle;
+    setUserState(true);
+  };
   return (
-    <div className="xl:w-2/4  sm:w-full ">
-      <div className="relative flex flex-col min-w-0  w-full mb-6 shadow-lg rounded-xl bg-gray-300 bg-opacity-20 ">
+    <div className="xl:w-2/4  sm:w-full  ">
+      <div className="relative flex flex-col min-w-0  w-full shadow-lg rounded-xl bg-gray-300 bg-opacity-10 ">
         <div className="rounded-t mb-0 px-6 py-6 ">
           <div className="text-center mb-3">
             <h6 className="text-white text-sm font-bold">Sign in with</h6>
@@ -29,7 +36,7 @@ export default function Login() {
               className="bg-gray-300 hover:bg-gray-100 text-gray-600 px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
               type="button"
               style={{ transition: "all .15s ease" }}
-              onClick={signInWithGoogle}
+              onClick={handleGoogle}
             >
               <div className="mr-3">
                 <Image src={google} className="" width="30" height="30" />
@@ -104,7 +111,7 @@ export default function Login() {
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
-                  stroke="currentColor"
+                  stroke="#FFFFFF"
                   className="w-6 h-6"
                 >
                   <path
@@ -124,7 +131,7 @@ export default function Login() {
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
-                  stroke="currentColor"
+                  stroke="#FFFFFF"
                   className="w-6 h-6"
                 >
                   <path
@@ -161,7 +168,7 @@ export default function Login() {
 
           <div className="text-center mt-6">
             <button
-              className="bg-gray-800 text-white active:bg-gray-900 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full"
+              className="bg-gray-800 text-white active:bg-gray-900 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none w-full"
               type="button"
               style={{ transition: "all .15s ease" }}
               onClick={() => logInWithEmailAndPassword(email, password)}

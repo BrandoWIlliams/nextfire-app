@@ -14,7 +14,7 @@ export default function Register() {
   });
   return (
     <div className="xl:w-2/4  sm:w-full ">
-      <div className="relative flex flex-col min-w-0  w-full mb-6 shadow-lg rounded-xl bg-gray-300 bg-opacity-20 ">
+      <div className="relative flex flex-col min-w-0  w-full shadow-lg rounded-xl bg-gray-300 bg-opacity-10 ">
         <div className="rounded-t mb-0 px-6 py-6 ">
           <div className="text-center mb-3">
             <h6 className="text-white text-sm font-bold">Sign in with</h6>

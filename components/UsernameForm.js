@@ -3,32 +3,37 @@ import { UserContext } from "../lib/context";
 import { pp } from "../public/Images/profile2.jpg";
 import Image from "next/image";
 import userNameAvailable from "../lib/firebase";
+import { updateUserName } from "../lib/firebase";
 import debounce from "lodash.debounce";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 export default function UsernameForm() {
   const { user, username } = useContext(UserContext);
+  const router = useRouter();
   const [userName, setuserName] = useState("");
   const [valid, setValid] = useState(null);
   const [timer, setTimer] = useState(null);
 
-  // useEffect(() => {
-  //   const delayDebounceFn = setTimeout(() => {
-  //     userNameAvailable(userName).then(valid => setValid(valid))
-  //     // setValid();
-  //     console.log(valid);
-  //   }, 500);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [userName]);
-
-  const checkUsername = useCallback( 
+  const checkUsername = useCallback(
     debounce(async function (name) {
       const valid = await userNameAvailable(name);
       setValid(valid);
-      console.log(name, valid)
+      console.log(name, valid);
     }, 500),
     []
   );
+  const handleUpdate = async (userName) => {
+    if (valid == true) {
+      const passed = await updateUserName(userName);
+      if (passed == true) {
+        toast.success("Your username has been updated successfully");
+        router.push("/index");
+      } else if (passed == false) {
+        toast.error("There was an error updating your username");
+      }
+    }
+  };
 
   const handleChange = (name) => {
     setuserName(name);
@@ -37,11 +42,9 @@ export default function UsernameForm() {
   };
 
   return (
-    <div  className=" flex justify-center">
+    <div className=" flex justify-center">
       {/* card */}
-      <div
-        className=" bg-gray-300 backdrop-blur-sm bg-opacity-20 flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl xl:w-1/2"
-      >
+      <div className=" bg-gray-300 backdrop-blur-sm bg-opacity-10 flex flex-col items-center justify-center p-4 shadow-lg rounded-2xl xl:w-1/2">
         <div className="p-5">
           <h1 className="text-white text-center text-xl">
             One last thing... <br />
@@ -101,7 +104,9 @@ export default function UsernameForm() {
             </svg>
           )}
         </div>
-        <button className="mt-5">Finish</button>
+        <button className="mt-5" onClick={() => handleUpdate(userName)}>
+          Finish
+        </button>
       </div>
     </div>
   );

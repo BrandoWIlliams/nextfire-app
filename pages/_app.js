@@ -12,14 +12,11 @@ import {
 } from "recoil";
 
 function MyApp({ Component, pageProps }) {
-  const userData = useUserData();
   return (
     <RecoilRoot>
-      <UserContext.Provider value={userData}>
-        <Navbar />
-        <Component {...pageProps} />
-        <Toaster />
-      </UserContext.Provider>
+      <Navbar />
+      <Component {...pageProps} />
+      <Toaster />
     </RecoilRoot>
   );
 }
