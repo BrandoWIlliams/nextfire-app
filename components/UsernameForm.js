@@ -3,33 +3,37 @@ import { UserContext } from "../lib/context";
 import { pp } from "../public/Images/profile2.jpg";
 import Image from "next/image";
 import userNameAvailable from "../lib/firebase";
-import debounce from "lodash/debounce";
+import debounce from "lodash.debounce";
 
 export default function UsernameForm() {
   const { user, username } = useContext(UserContext);
   const [userName, setuserName] = useState("");
-  const [valid, setValid] = useState(false);
+  const [valid, setValid] = useState(null);
   const [timer, setTimer] = useState(null);
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setValid(userNameAvailable(userName));
-      console.log(valid);
-    }, 500);
+  // useEffect(() => {
+  //   const delayDebounceFn = setTimeout(() => {
+  //     userNameAvailable(userName).then(valid => setValid(valid))
+  //     // setValid();
+  //     console.log(valid);
+  //   }, 500);
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [userName]);
+  //   return () => clearTimeout(delayDebounceFn);
+  // }, [userName]);
 
-  // const checkUsername = useCallback(
-  //   debounce(function () {
-  //     userNameAvailable(userName);
-  //   }, 500),
-  //   []
-  // );
-  // const handleChange = (e) => {
-  //   setuserName(e.target.value);
-  //   checkUsername(e.target.value);
-  // };
+  const checkUsername = useCallback(
+    debounce(async function () {
+      const valid = await userNameAvailable(userName);
+      setValid(valid);
+      console.log(valid)
+    }, 500),
+    []
+  );
+
+  const handleChange = (name) => {
+    setuserName(name);
+    checkUsername(name);
+  };
 
   return (
     <div class="main" className=" flex justify-center">
@@ -53,7 +57,7 @@ export default function UsernameForm() {
               class="w-full  text-white placeholder-transparent  bg-white bg-opacity-10  peer focus:outline-none "
               placeholder="Name"
               value={userName}
-              onChange={(e) => setuserName(e.target.value)}
+              onChange={(e) => handleChange(e.target.value)}
               autoComplete="off"
             />
             <label
