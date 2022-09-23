@@ -1,5 +1,8 @@
 import React, { useState } from "react";
-import { logInWithEmailAndPassword, signInWithGoogle } from "../lib/firebase";
+import { logInWithEmailAndPassword } from "../lib/firebase";
+import test from "../lib/firebase";
+import firebase from "../lib/firebase";
+import { signInWithGoogle } from "../lib/firebase";
 import google from "../public/Images/google.svg";
 import github from "../public/Images/github.svg";
 import { userNameAtom, userAtom } from "../lib/atoms";
@@ -10,10 +13,31 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState({ value: "", show: false });
   const setUserState = useSetRecoilState(userAtom);
-  const handleGoogle = () => {
-    signInWithGoogle;
-    setUserState(true);
+
+  const handleClick = async () => {
+    const passed = { username: "", passed: null };
+    passed = await signInWithGoogle().then(() => {
+      console.log(
+        "the userName retreived is: " +
+          passed.username +
+          " the passed value is: " +
+          passed.passed
+      );
+    });
+    if (passed == true) {
+      setUserState(true);
+    }
   };
+  // const handleGoogleClick = () => {
+  //   const authObject = signInWithGoogle;
+  //   if (authObject) {
+  //     console.log("auth state updated");
+  //     setUserState(authObject);
+  //   } else {
+  //     console.log("Something went wrong");
+  //     setUserState(null);
+  //   }
+  // };
   return (
     <div className="xl:w-2/4  sm:w-full  ">
       <div className="relative flex flex-col min-w-0  w-full shadow-lg rounded-xl bg-gray-300 bg-opacity-10 ">
@@ -36,7 +60,7 @@ export default function Login() {
               className="bg-gray-300 hover:bg-gray-100 text-gray-600 px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs"
               type="button"
               style={{ transition: "all .15s ease" }}
-              onClick={handleGoogle}
+              onClick={handleClick}
             >
               <div className="mr-3">
                 <Image src={google} className="" width="30" height="30" />

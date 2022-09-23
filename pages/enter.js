@@ -9,14 +9,15 @@ import Register from "../components/Register";
 import { useRouter } from "next/router";
 import { userNameAtom, userAtom } from "../lib/atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { getAuth } from "firebase/auth";
 
 export default function EnterPage() {
   const { user, username } = useContext(UserContext);
   const [register, setRegister] = useState(false);
   const userNameState = useRecoilValue(userNameAtom);
-  const userState = useRecoilValue(userAtom);
-
+  const userState = false;
   const router = useRouter();
+
   return (
     <main>
       {userState ? (
