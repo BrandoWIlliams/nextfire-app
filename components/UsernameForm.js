@@ -7,9 +7,12 @@ import { updateUserName } from "../lib/firebase";
 import debounce from "lodash.debounce";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import { userNameAtom } from "../lib/atoms";
+import { useSetRecoilState } from "recoil";
 
 export default function UsernameForm() {
   const { user, username } = useContext(UserContext);
+  const setUserNameState = useSetRecoilState(userNameAtom);
   const router = useRouter();
   const [userName, setuserName] = useState("");
   const [valid, setValid] = useState(null);
@@ -23,11 +26,12 @@ export default function UsernameForm() {
     }, 500),
     []
   );
-  const handleUpdate = async (userName) => {
+  const handleUpdate = async (uName) => {
     if (valid == true) {
-      const passed = await updateUserName(userName);
+      const passed = await updateUserName(uName);
       if (passed == true) {
         toast.success("Your username has been updated successfully");
+        setUserNameState(uName);
         router.push("/index");
       } else if (passed == false) {
         toast.error("There was an error updating your username");
@@ -37,7 +41,7 @@ export default function UsernameForm() {
 
   const handleChange = (name) => {
     setuserName(name);
-    //TODO set valid to 'pending' or false or something before checking
+    setValid(false);
     checkUsername(name);
   };
 

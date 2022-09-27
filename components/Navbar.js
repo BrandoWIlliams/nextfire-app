@@ -1,23 +1,32 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { logout, auth } from "../lib/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import { getAuth } from "firebase/auth";
 import { UserContext } from "../lib/context";
+import { signOut } from "firebase/auth";
+import { userNameAtom, userAtom } from "../lib/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 export default function Navbar() {
   const router = useRouter();
   // const [user, loading, error] = useAuthState(auth);
-  const { user, username } = useContext(UserContext);
+  const userState = useRecoilValue(userAtom);
+  const userNameState = useRecoilValue(userNameAtom);
+  const setUserNameState = useSetRecoilState(userNameAtom);
+  const setUserState = useSetRecoilState(userAtom);
+  const [loggedIn, setloggedIn] = useState(null);
 
-  // useEffect(() => {
-  //   if (loading) {
-  //     return;
-  //   }
-
-  //   if (user) router.push("/index");
-  // }, [user, loading]);
+  useEffect(() => {
+    const auth = getAuth();
+    if (auth.currentUser) {
+      setloggedIn(true);
+    } else {
+      setloggedIn(false);
+    }
+  }, [auth, userState]);
   return (
     <nav className="navbar">
       <ul>
@@ -28,7 +37,7 @@ export default function Navbar() {
         </li>
 
         {/* User is signed in and has a username */}
-        {username && user ? (
+        {/* {username && user ? (
           <div>
             <li className="push-left flex">
               <Link href="/admin">
@@ -51,21 +60,56 @@ export default function Navbar() {
               </Link>
             </li>
           </div>
+        ) : ( */}
+        {loggedIn ? (
+          <button
+            className="btn-blue"
+            onClick={() => {
+              signOut(auth);
+              setUserState(false);
+              // logout(auth);
+              console.log(auth);
+            }}
+          >
+            Logout{" "}
+          </button>
         ) : (
           <button
             className="btn-blue"
-            onClick={
-              user
-                ? () => {
-                    logout(auth);
-                    router.push("enter");
-                  }
-                : () => router.push("/enter")
-            }
+            onClick={() => {
+              console.log(auth.currentUser);
+              router.push("/enter");
+            }}
           >
-            {user ? "Return?" : "LogIn"}
+            Login
           </button>
         )}
+        <button
+          className="btn-blue"
+          onClick={() => {
+            console.log(auth);
+          }}
+        >
+          auth state
+        </button>
+        <button
+          className="btn-blue"
+          onClick={() => {
+            console.log(userNameState);
+          }}
+        >
+          user nam state
+        </button>
+        {/* {userState ? (
+          <button
+            className="btn-blue"
+            onClick={() => {
+              signOut(auth);
+            }}
+          >
+            logout
+          </button>
+        ) : null} */}
 
         {/* User is not signed in or has not created a username */}
       </ul>

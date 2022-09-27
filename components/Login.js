@@ -13,18 +13,29 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState({ value: "", show: false });
   const setUserState = useSetRecoilState(userAtom);
+  const setUserNameState = useSetRecoilState(userNameAtom);
+  const userNameState = useRecoilValue(userNameAtom);
 
   const handleClick = async () => {
-    const passed = { username: "", passed: null };
-    passed = await signInWithGoogle().then(() => {
+    const result = { username: "", exists: null };
+    result = await signInWithGoogle();
+    console.log(result.username, result.exists);
+    if (result.exists == true) {
+      setUserNameState(result.username);
       console.log(
-        "the userName retreived is: " +
-          passed.username +
-          " the passed value is: " +
-          passed.passed
+        "There is already a user, with a username " +
+          result.username +
+          "\n" +
+          "The length is " +
+          result.username.length
       );
-    });
-    if (passed == true) {
+      setUserState(true);
+    } else if (result.exists == false) {
+      setUserNameState(result.username);
+      console.log(
+        "There is no user, created one ",
+        result.username + "\n" + "Recoil state value is " + userNameState
+      );
       setUserState(true);
     }
   };
